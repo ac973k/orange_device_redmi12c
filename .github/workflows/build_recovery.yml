@@ -81,12 +81,6 @@ jobs:
         sudo bash setup/android_build_env.sh
         sudo bash setup/install_android_sdk.sh
 
-    - name: Install OpenJDK
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'zulu'
-        java-version: '8'
-
     - name: Setup SSH Keys
       if: ${{ startsWith(github.event.inputs.MANIFEST_URL, 'git@github.com') }}
       uses: webfactory/ssh-agent@v0.5.4
@@ -105,7 +99,6 @@ jobs:
       run: |
         mkdir ~/OrangeFox_sync
         cd ~/OrangeFox_sync
-        echo "workspace-folder=$(pwd)" >> $GITHUB_OUTPUT
         git config --global user.name "ac973k"
         git config --global user.email "daniil@terentyeff.ru"
         cd ~/OrangeFox_sync/sync/
@@ -114,6 +107,7 @@ jobs:
       
     - name: Clone device tree
       run: |
+        cd ~/fox_12.1
         git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
@@ -129,7 +123,7 @@ jobs:
       uses: haya14busa/action-cond@v1
       id: buildtree
       with:
-        cond: ${{ github.event.inputs.MANIFEST_BRANCH == 'fox_11.0' || github.event.inputs.MANIFEST_BRANCH == 'fox_12.1' }}
+        cond: ${{ github.event.inputs.MANIFEST_BRANCH == '11.0' || github.event.inputs.MANIFEST_BRANCH == '12.1' }}
         if_true: twrp
         if_false: omni
 
@@ -159,9 +153,9 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: | 
-          workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/${{ github.event.inputs.BUILD_TARGET }}.img
-          workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
-          workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*vendor*.img
+          ~/fox_12.1/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/${{ github.event.inputs.BUILD_TARGET }}.img
+          ~/fox_12.1/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
+          ~/fox_12.1/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*vendor*.img
         name: ${{ github.event.inputs.DEVICE_NAME }}-${{ github.run_id }}
         tag_name: ${{ github.run_id }}
         body: |
