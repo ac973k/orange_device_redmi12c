@@ -78,7 +78,7 @@ jobs:
         cd ~
         git clone https://gitlab.com/OrangeFox/misc/scripts
         cd scripts
-        sudo bash setup/install_android_sdk.sh
+        # sudo bash setup/install_android_sdk.sh
 
     - name: Setup SSH Keys
       if: ${{ startsWith(github.event.inputs.MANIFEST_URL, 'git@github.com') }}
