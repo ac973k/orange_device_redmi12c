@@ -134,7 +134,7 @@ jobs:
 
     - name: Building recovery
       run: |
-        cd ~/OrangeFox
+        cd ~/fox_12.1
         source build/envsetup.sh
         export FOX_BUILD_DEVICE=earth
         export LC_ALL="C"
